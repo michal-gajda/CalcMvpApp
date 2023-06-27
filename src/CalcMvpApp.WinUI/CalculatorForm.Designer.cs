@@ -46,6 +46,9 @@ partial class CalculatorForm
         txtLeftValue.Name = "txtLeftValue";
         txtLeftValue.Size = new Size(402, 31);
         txtLeftValue.TabIndex = 0;
+        txtLeftValue.Text = "0";
+        txtLeftValue.KeyPress += this.txtValue_KeyPress;
+        txtLeftValue.Validating += this.txtValue_Validating;
         // 
         // txtRightValue
         // 
@@ -53,11 +56,15 @@ partial class CalculatorForm
         txtRightValue.Name = "txtRightValue";
         txtRightValue.Size = new Size(402, 31);
         txtRightValue.TabIndex = 1;
+        txtRightValue.Text = "0";
+        txtRightValue.KeyPress += this.txtValue_KeyPress;
+        txtRightValue.Validating += this.txtValue_Validating;
         // 
         // txtResultValue
         // 
         txtResultValue.Location = new Point(76, 141);
         txtResultValue.Name = "txtResultValue";
+        txtResultValue.ReadOnly = true;
         txtResultValue.Size = new Size(402, 31);
         txtResultValue.TabIndex = 2;
         // 

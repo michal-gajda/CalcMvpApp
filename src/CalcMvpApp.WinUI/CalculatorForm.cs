@@ -1,5 +1,6 @@
 namespace CalcMvpApp.WinUI;
 
+using System.ComponentModel;
 using System.Globalization;
 using CalcMvpApp.Models;
 using CalcMvpApp.Presenters;
@@ -7,7 +8,9 @@ using CalcMvpApp.Views;
 
 public partial class CalculatorForm : Form, ICalculatorView
 {
+    private const string DEFAULT_ERROR_CAPTION = "Error";
     private readonly CalculatorPresenter presenter;
+
     public CalculatorForm()
     {
         this.InitializeComponent();
@@ -34,11 +37,40 @@ public partial class CalculatorForm : Form, ICalculatorView
 
     private void btnDivide_Click(object sender, EventArgs e)
     {
-        this.presenter.Divide();
+        try
+        {
+            this.presenter.Divide();
+        }
+        catch (DivideByZeroException exception)
+        {
+            MessageBox.Show(exception.Message, DEFAULT_ERROR_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
     }
 
     private void btnSubtract_Click(object sender, EventArgs e)
     {
         this.presenter.Subtract();
+    }
+
+    private void txtValue_KeyPress(object sender, KeyPressEventArgs e)
+    {
+        var isControl = char.IsControl(e.KeyChar);
+        var isDigit = char.IsDigit(e.KeyChar);
+        var @char = e.KeyChar;
+
+        if (isControl is false && isDigit is false && @char is not '.')
+        {
+            e.Handled = true;
+        }
+
+        if (e.KeyChar is '.' && (sender as TextBox)!.Text.IndexOf('.') > -1)
+        {
+            e.Handled = true;
+        }
+    }
+
+    private void txtValue_Validating(object sender, CancelEventArgs e)
+    {
+        e.Cancel = !decimal.TryParse((sender as TextBox)!.Text, out _);
     }
 }
